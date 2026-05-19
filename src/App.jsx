@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 const profile = {
   name: "王铮",
   englishName: "Wang Zheng",
+  photo: "/image/Profile.jpg",
   role: "Immersive Technology / VR & AR / Game Interaction Designer",
   school:
     "MSc Immersive Technologies (Virtual and Augmented Reality), University of Bristol",
@@ -282,16 +283,19 @@ function ProjectCard({ project, index }) {
               <br />
               {project.type}
             </p>
+
             <p>
               <span className="text-neutral-200">Team</span>
               <br />
               {project.team}
             </p>
+
             <p className="sm:col-span-2">
               <span className="text-neutral-200">My Role</span>
               <br />
               {project.role}
             </p>
+
             <p className="sm:col-span-2">
               <span className="text-neutral-200">Tools</span>
               <br />
@@ -465,14 +469,22 @@ export default function App() {
             transition={{ duration: 0.7, delay: 0.12 }}
             className="rounded-[2rem] border border-white/10 bg-white/10 p-6 shadow-2xl shadow-black/30 backdrop-blur"
           >
-            <div className="aspect-square rounded-[1.5rem] bg-[radial-gradient(circle_at_35%_20%,rgba(255,255,255,0.9),transparent_18%),radial-gradient(circle_at_70%_70%,rgba(120,120,120,0.8),transparent_24%),linear-gradient(135deg,#fafafa,#555_45%,#060606)] p-1">
-              <div className="flex h-full items-end rounded-[1.35rem] bg-neutral-950/35 p-5">
-                <div>
-                  <p className="text-3xl font-semibold">{profile.name}</p>
-                  <p className="mt-1 text-lg text-neutral-100">
-                    {profile.englishName}
-                  </p>
-                </div>
+            <div className="relative aspect-square overflow-hidden rounded-[1.5rem] border border-white/10 bg-neutral-900">
+              <img
+                src={profile.photo}
+                alt={`${profile.englishName} profile photo`}
+                className="h-full w-full object-cover object-center"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+
+              <div className="absolute bottom-5 left-5 right-5">
+                <p className="text-3xl font-semibold text-white">
+                  {profile.name}
+                </p>
+                <p className="mt-1 text-lg text-neutral-100">
+                  {profile.englishName}
+                </p>
               </div>
             </div>
 
