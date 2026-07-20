@@ -865,8 +865,7 @@ export default function App() {
 
       <div className="post-home-shell">
         <SectionEdgeBlur />
-      <Reveal
-        as={motion.section}
+      <section
         id="work"
         className="work-section mx-auto max-w-7xl px-6 py-20"
       >
@@ -921,7 +920,7 @@ export default function App() {
             );
           })}
         </div>
-      </Reveal>
+      </section>
 
       <SupportingCarousel
         projects={supportingProjects}
