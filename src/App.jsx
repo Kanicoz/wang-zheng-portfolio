@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import BorderGlow from "./components/BorderGlow";
 import Galaxy from "./components/Galaxy";
@@ -34,7 +35,7 @@ const projects = [
     tools: ["Unity", "Wwise", "Maya", "Blender"],
     tags: ["VR", "Level Design", "Dream Space", "Interactive Props", "Sound"],
     video:
-      "https://1drv.ms/v/c/bdc609e61e93261b/IQA_mekCI6GaSpH3eIB8oNaOAfF_ZEwCSe3---imRMerGiI?e=2JuBRi",
+      "/Video/VR%E6%B8%B8%E6%88%8F.mp4",
     images: [
       "/image/image1.png",
       "/image/image2.png",
@@ -66,7 +67,7 @@ const projects = [
     tools: ["Unity"],
     tags: ["AR", "Image Tracking", "Level Generation", "Gameplay"],
     video:
-      "https://1drv.ms/v/c/bdc609e61e93261b/IQB9BGnLzaYEQ49cjvwzRyVPAXVLZr_NGopP7Z4jCVwNr-s?e=s5amzI",
+      "/Video/AR%E6%B8%B8%E6%88%8F.mp4",
     images: ["/image/image10.png", "/image/image11.png", "/image/image12.png"],
     summary:
       "一款基于符文识别、空间扫描和战斗场景生成的 AR 玩法原型。",
@@ -121,7 +122,7 @@ const projects = [
     tools: ["Unreal Engine"],
     tags: ["UE", "Turn-Based Combat", "AI", "UI", "Game System"],
     video:
-      "https://1drv.ms/v/c/bdc609e61e93261b/IQDnaPtUb5VLRLHC99mHdIMsAUisBOkQ5fUN1UxRBcXwLZo?e=yltLhC",
+      "/Video/%E5%9B%9E%E5%90%88%E5%88%B6%E6%88%98%E6%96%97%E6%B8%B8%E6%88%8F.mp4",
     images: ["/image/image7.png", "/image/image8.png", "/image/image9.png"],
     summary:
       "一个使用 Unreal Engine 制作的回合制战斗原型，包含行动顺序 UI、目标选择、敌人遭遇、战斗反馈、掉落和仓库系统。",
@@ -146,7 +147,7 @@ const projects = [
     tools: ["Unreal Engine", "Blueprint"],
     tags: ["UE", "Blueprint", "Puzzle", "Scene Interaction", "Personal Game"],
     video:
-      "https://1drv.ms/v/c/bdc609e61e93261b/IQDdKg1RzBRsQ5rV7dnNE43IAQVJQT8HxlNfDaU4JtKyerQ?e=eUtVAS",
+      "/Video/%E6%A8%B1%E4%B9%8B%E6%A2%A6.mp4",
     images: ["/image/%E6%A8%B1%E4%B9%8B%E6%A2%A60.png", "/image/%E6%A8%B1%E4%B9%8B%E6%A2%A61.png"],
     summary:
       "彩蛋：人生中第一个游戏。用 UE 蓝图完成场景交互、解密机制、时间变化、特效和音频反馈。",
@@ -756,11 +757,76 @@ function SectionEdgeBlur() {
   );
 }
 
+function VideoModal({ project, onClose }) {
+  useEffect(() => {
+    if (!project) return undefined;
+    const handleKeyDown = (event) => event.key === "Escape" && onClose();
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [project, onClose]);
+
+  if (!project) return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+      onMouseDown={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="w-full max-w-5xl overflow-hidden rounded-3xl border border-white/15 bg-[#111216] shadow-2xl"
+        onMouseDown={(event) => event.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${project.cnTitle} 演示视频`}
+      >
+        <div className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-4">
+          <div className="min-w-0">
+            <p className="truncate font-medium text-white">{project.cnTitle}</p>
+            <p className="truncate text-sm text-neutral-500">{project.title}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5 text-xl text-white transition hover:bg-white/10"
+            aria-label="关闭视频"
+          >
+            ×
+          </button>
+        </div>
+        <video
+          src={project.video}
+          controls
+          autoPlay
+          playsInline
+          className="aspect-video w-full bg-black"
+        />
+      </motion.div>
+    </div>,
+    document.body,
+  );
+}
+
 export default function App() {
   const [supportIndex, setSupportIndex] = useState(0);
+  const [videoProject, setVideoProject] = useState(null);
+
+  const handleLocalVideoClick = (event) => {
+    const link = event.target.closest('a[href^="/Video/"]');
+    if (!link) return;
+    const project = projects.find((item) => item.video === link.getAttribute("href"));
+    if (!project) return;
+    event.preventDefault();
+    setVideoProject(project);
+  };
 
   return (
-    <main className="portfolio-bg min-h-screen text-neutral-50">
+    <main className="portfolio-bg min-h-screen text-neutral-50" onClick={handleLocalVideoClick}>
       <section className="relative min-h-screen overflow-hidden border-b border-white/10">
         <BackgroundVideo src={portfolioVideo} className="opacity-[0.48]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_48%_34%,rgba(8,9,12,0.08),rgba(5,6,8,0.68)_74%)]" />
@@ -1011,6 +1077,7 @@ export default function App() {
         <p>Built with React for job applications in China.</p>
       </footer>
       </div>
+      <VideoModal project={videoProject} onClose={() => setVideoProject(null)} />
     </main>
   );
 }
