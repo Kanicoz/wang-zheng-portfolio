@@ -146,8 +146,7 @@ const projects = [
     role: "蓝图逻辑、场景交互、解密机制、时间与天空变化、粒子和音频效果、场景重搭",
     tools: ["Unreal Engine", "Blueprint"],
     tags: ["UE", "Blueprint", "Puzzle", "Scene Interaction", "Personal Game"],
-    video:
-      "/Video/%E6%A8%B1%E4%B9%8B%E6%A2%A6.mp4",
+    video: null,
     images: ["/image/%E6%A8%B1%E4%B9%8B%E6%A2%A60.png", "/image/%E6%A8%B1%E4%B9%8B%E6%A2%A61.png"],
     summary:
       "彩蛋：人生中第一个游戏。用 UE 蓝图完成场景交互、解密机制、时间变化、特效和音频反馈。",
@@ -550,14 +549,16 @@ function SupportingCarousel({ projects, activeIndex, setActiveIndex }) {
                         />
                       ))}
                     </div>
-                    <a
-                      href={project.video}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="sakura-pixel-link"
-                    >
-                      观看 Demo <Arrow />
-                    </a>
+                    {project.video && (
+                      <a
+                        href={project.video}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="sakura-pixel-link"
+                      >
+                        观看 Demo <Arrow />
+                      </a>
+                    )}
                     <span className="sakura-pixel-count">
                       {activeIndex + 1} / {projects.length}
                     </span>
